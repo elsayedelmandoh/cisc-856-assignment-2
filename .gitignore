@@ -1,0 +1,16 @@
+# environment
+.env
+.venv/
+venv/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# docs and internal files
+docs/00-internal/
