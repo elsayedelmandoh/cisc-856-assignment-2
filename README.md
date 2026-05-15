@@ -1,4 +1,4 @@
-# cisc 856 assignment 2 — monte carlo methods in rl
+# cisc 856 assignment 2 - monte carlo methods in rl
 
 elsayed elmandouh - 20596379 - reinforcement learning - queen's university
 
