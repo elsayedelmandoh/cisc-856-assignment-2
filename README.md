@@ -146,43 +146,61 @@ cisc-856-assignment-2/
 
 ### learned q-table (exploring starts)
 
-```
- state      up   right    left    down   best
-     0   0.466   0.616   0.476   0.342  right
-     1   0.606   0.755   0.476   0.617  right
-     2   0.743   0.900   0.617   0.617  right
-  GOAL   0.000   0.000   0.000   0.000     up
-     4   0.485   0.353   0.351   0.234     up
-     6   0.754  -0.245   0.605   0.461     up
-  FIRE   0.900  -0.245   0.607   0.345     up
- START   0.360   0.328   0.235   0.235     up
-     9   0.325   0.482   0.226   0.319  right
-    10   0.616   0.323   0.333   0.475     up
-    11  -0.245   0.334   0.483   0.329   left
-```
+| state | up | right | left | down | best |
+|-------|----|-------|------|------|------|
+| 0 | 0.468 | **0.616** | 0.476 | 0.343 | right |
+| 1 | 0.607 | **0.755** | 0.486 | 0.617 | right |
+| 2 | 0.743 | **0.900** | 0.617 | 0.617 | right |
+| goal | 0.000 | 0.000 | 0.000 | 0.000 | - |
+| 4 | **0.484** | 0.352 | 0.343 | 0.187 | up |
+| 6 | **0.754** | -0.245 | 0.601 | 0.472 | up |
+| fire | **0.900** | -0.245 | 0.608 | 0.327 | up |
+| start | **0.356** | 0.342 | 0.165 | 0.216 | up |
+| 9 | 0.340 | **0.482** | 0.219 | 0.353 | right |
+| 10 | **0.612** | 0.346 | 0.353 | 0.458 | up |
+| 11 | -0.245 | 0.350 | **0.483** | 0.346 | left |
 
 the learned policy routes from start (8) → up → 4 → up → 0 → right → 1 → right → 2 → right → goal (3)
 
 ### sample output
-
-```
-=== final state values: off-policy prediction ===
-  V(    0) = 0.5770
-  V(    1) = 0.7247
-  V(    2) = 0.9000
-  V( GOAL) = 0.0000
-  V(    4) = 0.4450
-  V(    6) = 0.7287
-  V( FIRE) = 0.9000
-  V(START) = 0.3098
-  V(    9) = 0.4478
-  V(   10) = 0.5776
-  V(   11) = 0.4188
-```
+| state | v(s) |
+|-------|------|
+| 0 | 0.578 |
+| 1 | 0.726 |
+| 2 | 0.900 |
+| goal | 0.000 |
+| 4 | 0.444 |
+| 6 | 0.726 |
+| fire | 0.900 |
+| start | 0.331 |
+| 9 | 0.448 |
+| 10 | 0.574 |
+| 11 | 0.402 |
 
 all four algorithms converge successfully. on-policy methods converge faster (~8k episodes) while off-policy methods require ~16k episodes due to importance sampling variance
 
 ### figures
+
+### learned policies
+
+![policy comparison - all three control methods](docs/02-results/fig01_mc_policies.png)
+
+figure 1 compares the q-value heatmaps and policy arrows for all three control methods. all three discover essentially the same optimal path: start (8) → up → 4 → up → 0 → right → 1 → right → 2 → right → goal (3). the off-policy control method has noisier q-values at less-visited states but the policy stays correct.
+
+### off-policy prediction heatmap
+
+![state-value function from weighted is](docs/02-results/fig02_mc_prediction.png)
+
+figure 2 shows the state-value function v(s) estimated by off-policy weighted importance sampling. the target policy is the greedy policy learned by algorithm i. the heatmap clearly shows higher values near the goal, with the wall cell blanked out.
+
+### learning curves
+
+![episode reward curves (window=200)](docs/02-results/fig03_mc_learning_curves.png)
+
+figure 3 plots total reward per episode smoothed over 200 episodes. all three methods converge to stable positive reward:
+- **exploring starts** - converges fastest, reaching positive reward within ~500 episodes
+- **epsilon-greedy** - slightly slower start because the 10% random actions add noise, but converges to the same level
+- **off-policy control** - takes the longest and has the most variance (needs 2x episodes), because the uniform behaviour policy generates lots of irrelevant trajectories
 
 see `docs/02-results/` for the generated visualizations
 
